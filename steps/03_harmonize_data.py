@@ -1,7 +1,7 @@
 # Views to transform marketplace data in pipeline
 
 import os
-import toml
+# import toml
 from snowflake.core import Root, CreateMode
 from snowflake.snowpark import Session
 from snowflake.core.user_defined_function import (
@@ -32,7 +32,7 @@ def load_toml_config(file_path: str, section_name: str) -> dict:
 
 # --- B. Load the Connection Parameters ---
 config_file = ".snowflake/config.toml"
-section = "HGADUCS-ANK-AZUSEAST2"
+section = "HGADUCS-ANK_ AZUSEAST2"
 """
 To join the flight and location focused tables 
 we need to cross the gap between the airport and cities domains. 
@@ -251,6 +251,35 @@ pipeline = [
         group by city.geo_id, city.geo_name, city.total_population
         """,
     ),
+
+    View(
+        name="attractions",
+        columns=[
+            ViewColumn(name="geo_id"),
+            ViewColumn(name="geo_name"),
+            ViewColumn(name="aquarium_cnt"),
+            ViewColumn(name="zoo_cnt"),
+            ViewColumn(name="korean_restaurant_cnt"),
+        ],
+        query="""
+    select
+        city.geo_id,
+        city.geo_name,
+        count(case when category_main = 'Aquarium' THEN 1 END) aquarium_cnt,
+        count(case when category_main = 'Zoo' THEN 1 END) zoo_cnt,
+        count(case when category_main = 'Korean Restaurant' THEN 1 END) korean_restaurant_cnt,
+    from SNOWFLAKE_PUBLIC_DATA_FREE.PUBLIC_DATA_FREE.point_of_interest_index poi
+    join SNOWFLAKE_PUBLIC_DATA_FREE.PUBLIC_DATA_FREE.point_of_interest_addresses_relationships poi_add 
+        on poi_add.poi_id = poi.poi_id
+    join SNOWFLAKE_PUBLIC_DATA_FREE.PUBLIC_DATA_FREE.us_addresses address 
+        on address.address_id = poi_add.address_id
+    join major_us_cities city on city.geo_id = address.id_city
+    where true
+        and category_main in ('Aquarium', 'Zoo', 'Korean Restaurant')
+        and id_country = 'country/USA'
+    group by city.geo_id, city.geo_name
+    """,
+    ),
     # Placeholder: Add new view definition here
 ]
 
@@ -262,9 +291,10 @@ pipeline = [
 #     "role": "AZ_PYTHON"
 # }
 
-connection_parameters = load_toml_config(config_file, section)
-session = Session.builder.configs(connection_parameters).create()
-root = Root(session)
+# connection_parameters = load_toml_config(config_file, section)
+# session = Session.builder.configs(connection_parameters).create()
+# root = Root(session)
+root = Root(Session.builder.getOrCreate())
 # root = Root(Session.builder.configs(connection_parameters).getOrCreate())
 
 # create views in Snowflake
