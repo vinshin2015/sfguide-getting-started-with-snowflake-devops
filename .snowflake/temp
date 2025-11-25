@@ -1,0 +1,11 @@
+This is to preserver the .snwoflake folder structure
+please add the .toml file in following format
+
+[connections.default]
+warehouse = "QUICKSTART_WH"
+role = "ACCOUNTADMIN"
+database = "QUICKSTART_COMMON"
+schema = "PUBLIC"
+account = "<INSERT YOUR ACCOUNT IDENTIFIER>"
+user = "<INSERT YOUR USERNAME>"
+password = "<INSERT YOUR PASSWORD>"
