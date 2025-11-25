@@ -3,10 +3,10 @@ use schema quickstart_prod.gold;
 
 
 --DESCRIBE NOTIFICATION INTEGRATION email_integration;
-ALTER NOTIFICATION INTEGRATION  email_integration
-  -- ENABLED = TRUE
-  -- TYPE = EMAIL
-  SET ALLOWED_RECIPIENTS =('vinayak.shinde@gmail.com');
+-- ALTER NOTIFICATION INTEGRATION  email_integration
+--   -- ENABLED = TRUE
+--   -- TYPE = EMAIL
+--   SET ALLOWED_RECIPIENTS =('vinayak.shinde@gmail.com');
 
 -- declarative target table of pipeline
 create or alter table vacation_spots (

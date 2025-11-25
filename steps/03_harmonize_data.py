@@ -1,7 +1,7 @@
 # Views to transform marketplace data in pipeline
 
 import os
-import toml
+# import toml
 from snowflake.core import Root, CreateMode
 from snowflake.snowpark import Session
 from snowflake.core.user_defined_function import (
@@ -32,7 +32,7 @@ def load_toml_config(file_path: str, section_name: str) -> dict:
 
 # --- B. Load the Connection Parameters ---
 config_file = ".snowflake/config.toml"
-section = "HGADUCS-ANK-AZUSEAST2"
+section = "HGADUCS-ANK_ AZUSEAST2"
 """
 To join the flight and location focused tables 
 we need to cross the gap between the airport and cities domains. 
@@ -291,9 +291,10 @@ pipeline = [
 #     "role": "AZ_PYTHON"
 # }
 
-connection_parameters = load_toml_config(config_file, section)
-session = Session.builder.configs(connection_parameters).create()
-root = Root(session)
+# connection_parameters = load_toml_config(config_file, section)
+# session = Session.builder.configs(connection_parameters).create()
+# root = Root(session)
+root = Root(Session.builder.getOrCreate())
 # root = Root(Session.builder.configs(connection_parameters).getOrCreate())
 
 # create views in Snowflake
