@@ -1,8 +1,0 @@
-[HGADUCS-ANK-AZUSEAST2]
-warehouse = "QUICKSTART_WH"
-role = "ACCOUNTADMIN"
-database = "QUICKSTART_PROD"
-schema = "PUBLIC"
-account = "HGADUCS-ANK_AZUSEAST2"
-user = "AZ_VINSHIN"
-password = "VinShin@198007"
