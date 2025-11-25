@@ -1,0 +1,5 @@
+[connections.default] 
+account = "${SNOWFLAKE_CONNECTIONS_DEFAULT_ACCOUNT}" 
+user = "${SNOWFLAKE_CONNECTIONS_DEFAULT_USER}" 
+authenticator = "SNOWFLAKE_JWT" 
+private_key_file = ".snowflake/snowflake_rsa_key"
