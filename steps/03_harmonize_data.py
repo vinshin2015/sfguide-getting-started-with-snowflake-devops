@@ -13,26 +13,26 @@ from snowflake.core.user_defined_function import (
 from snowflake.core.view import View, ViewColumn
 
 
-def load_toml_config(file_path: str, section_name: str) -> dict:
-    """Reads a TOML file and returns the parameters from a specific section."""
-    try:
-        # Load the entire TOML file into a dictionary
-        with open(file_path, 'r') as f:
-            config_data = toml.load(f)
+# def load_toml_config(file_path: str, section_name: str) -> dict:
+#     """Reads a TOML file and returns the parameters from a specific section."""
+#     try:
+#         # Load the entire TOML file into a dictionary
+#         with open(file_path, 'r') as f:
+#             config_data = toml.load(f)
 
-        # Return the dictionary for the specified section
-        return config_data.get(section_name, {})
-    except FileNotFoundError:
-        print(f"Error: Configuration file not found at {file_path}")
-        return {}
-    except Exception as e:
-        print(f"Error reading TOML file: {e}")
-        return {}
+#         # Return the dictionary for the specified section
+#         return config_data.get(section_name, {})
+#     except FileNotFoundError:
+#         print(f"Error: Configuration file not found at {file_path}")
+#         return {}
+#     except Exception as e:
+#         print(f"Error reading TOML file: {e}")
+#         return {}
 
 
-# --- B. Load the Connection Parameters ---
-config_file = ".snowflake/config.toml"
-section = "HGADUCS-ANK_ AZUSEAST2"
+# # --- B. Load the Connection Parameters ---
+# config_file = ".snowflake/config.toml"
+# section = "HGADUCS-ANK_ AZUSEAST2"
 """
 To join the flight and location focused tables 
 we need to cross the gap between the airport and cities domains. 
@@ -298,7 +298,7 @@ root = Root(Session.builder.getOrCreate())
 # root = Root(Session.builder.configs(connection_parameters).getOrCreate())
 
 # create views in Snowflake
-silver_schema = root.databases["QUICKSTART_PROD"].schemas["SILVER"]
+silver_schema = root.databases[f"quickstart_{os.environ['environment']}"].schemas["silver"]
 # silver_schema.user_defined_functions.create(
 #     map_city_to_airport, mode=CreateMode.or_replace
 # )
