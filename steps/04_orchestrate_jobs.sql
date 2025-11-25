@@ -123,9 +123,9 @@ alter task email_notification resume;
 execute task vacation_spots_update;
 
 
-
--- SQL commands to monitor the progress of tasks
 /*
+-- SQL commands to monitor the progress of tasks
+
 -- Get a list of tasks
 SHOW TASKS;
 
