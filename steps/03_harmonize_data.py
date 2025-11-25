@@ -1,7 +1,7 @@
 # Views to transform marketplace data in pipeline
 
 import os
-
+import toml
 from snowflake.core import Root, CreateMode
 from snowflake.snowpark import Session
 from snowflake.core.user_defined_function import (
@@ -13,6 +13,26 @@ from snowflake.core.user_defined_function import (
 from snowflake.core.view import View, ViewColumn
 
 
+def load_toml_config(file_path: str, section_name: str) -> dict:
+    """Reads a TOML file and returns the parameters from a specific section."""
+    try:
+        # Load the entire TOML file into a dictionary
+        with open(file_path, 'r') as f:
+            config_data = toml.load(f)
+
+        # Return the dictionary for the specified section
+        return config_data.get(section_name, {})
+    except FileNotFoundError:
+        print(f"Error: Configuration file not found at {file_path}")
+        return {}
+    except Exception as e:
+        print(f"Error reading TOML file: {e}")
+        return {}
+
+
+# --- B. Load the Connection Parameters ---
+config_file = ".snowflake/config.toml"
+section = "HGADUCS-ANK-AZUSEAST2"
 """
 To join the flight and location focused tables 
 we need to cross the gap between the airport and cities domains. 
@@ -170,7 +190,7 @@ pipeline = [
         join SNOWFLAKE_PUBLIC_DATA_FREE.PUBLIC_DATA_FREE.GEOGRAPHY_RELATIONSHIPS geo_rel 
             on geo_rel.related_geo_id = geo.geo_id
         where true
-            and ts.variable_name = 'Total Population, census.gov'
+            and ts.variable_name = 'Total population, census.gov'
             and date >= '2020-01-01'
             and geo.level = 'City'
             and geo_rel.geo_id = 'country/USA'
@@ -236,12 +256,21 @@ pipeline = [
 
 
 # entry point for PythonAPI
-root = Root(Session.builder.getOrCreate())
+# connection_parameters = {
+#     "connection_name": "HGADUCS-ANK_AZUSEAST2",
+#     "password": "",
+#     "role": "AZ_PYTHON"
+# }
+
+connection_parameters = load_toml_config(config_file, section)
+session = Session.builder.configs(connection_parameters).create()
+root = Root(session)
+# root = Root(Session.builder.configs(connection_parameters).getOrCreate())
 
 # create views in Snowflake
-silver_schema = root.databases["quickstart_prod"].schemas["silver"]
-silver_schema.user_defined_functions.create(
-    map_city_to_airport, mode=CreateMode.or_replace
-)
+silver_schema = root.databases["QUICKSTART_PROD"].schemas["SILVER"]
+# silver_schema.user_defined_functions.create(
+#     map_city_to_airport, mode=CreateMode.or_replace
+# )
 for view in pipeline:
     silver_schema.views.create(view, mode=CreateMode.or_replace)

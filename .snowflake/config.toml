@@ -1,8 +1,8 @@
-[connections.default]
+[HGADUCS-ANK-AZUSEAST2]
 warehouse = "QUICKSTART_WH"
 role = "ACCOUNTADMIN"
-database = "QUICKSTART_COMMON"
+database = "QUICKSTART_PROD"
 schema = "PUBLIC"
-account = "<INSERT YOUR ACCOUNT IDENTIFIER>"
-user = "<INSERT YOUR USERNAME>"
-password = "<INSERT YOUR PASSWORD>"
+account = "HGADUCS-ANK_AZUSEAST2"
+user = "AZ_VINSHIN"
+password = "VinShin@198007"

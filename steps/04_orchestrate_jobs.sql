@@ -2,6 +2,12 @@ use role accountadmin;
 use schema quickstart_prod.gold;
 
 
+DESCRIBE NOTIFICATION INTEGRATION email_integration;
+ALTER NOTIFICATION INTEGRATION  email_integration
+  -- ENABLED = TRUE
+  -- TYPE = EMAIL
+  SET ALLOWED_RECIPIENTS =('vinayak.shinde@gmail.com');
+
 -- declarative target table of pipeline
 create or alter table vacation_spots (
     city varchar
@@ -62,7 +68,7 @@ create or alter task email_notification
         from vacation_spots
         where true
           and punctual_pct >= 50
-          and avg_temperature_air_f >= 70
+          and avg_temperature_air_f >= 30 
           -- STEP 5: INSERT CHANGES HERE
         limit 10);
 
@@ -70,7 +76,7 @@ create or alter task email_notification
       if (:options = '[]') then
         CALL SYSTEM$SEND_EMAIL(
             'email_integration',
-            '<insert your email here>', -- INSERT YOUR EMAIL HERE
+            'vinayak.shinde@gmail.com', -- INSERT YOUR EMAIL HERE
             'New data successfully processed: No suitable vacation spots found.',
             'The query did not return any results. Consider adjusting your filters.');
       end if;
@@ -83,14 +89,14 @@ create or alter task email_notification
 
       CALL SYSTEM$SEND_EMAIL(
         'email_integration',
-        '<insert your email here>', -- INSERT YOUR EMAIL HERE
+        'vinayak.shinde@gmail.com', -- INSERT YOUR EMAIL HERE
         'New data successfully processed: The perfect place for your summer vacation has been found.',
         :response);
     exception
         when EXPRESSION_ERROR then
             CALL SYSTEM$SEND_EMAIL(
             'email_integration',
-            '<insert your email here>', -- INSERT YOUR EMAIL HERE
+            'vinayak.shinde@gmail.com', -- INSERT YOUR EMAIL HERE
             'New data successfully processed: Cortex LLM function inaccessible.',
             'It appears that the Cortex LLM functions are not available in your region');
     end;
@@ -105,9 +111,9 @@ alter task email_notification resume;
 execute task vacation_spots_update;
 
 
-/*
--- SQL commands to monitor the progress of tasks
 
+-- SQL commands to monitor the progress of tasks
+/*
 -- Get a list of tasks
 SHOW TASKS;
 
@@ -127,4 +133,4 @@ SELECT
 FROM TABLE(INFORMATION_SCHEMA.TASK_HISTORY())
 WHERE STATE = 'SCHEDULED'
 ORDER BY COMPLETED_TIME DESC;
-*/
+ */
