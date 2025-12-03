@@ -7,6 +7,7 @@ on:
       - dev
       - main
       - staging
+      - preprod
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
